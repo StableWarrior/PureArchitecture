@@ -17,7 +17,6 @@ async def lifespan(app: FastAPI):
     await engine.dispose()
 
 
-
 app = FastAPI(lifespan=lifespan)
 app.include_router(orders_router.router)
 
