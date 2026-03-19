@@ -1,12 +1,13 @@
-from ..schemas import OrderRequest
-from ..database.models import Order
-from .. infastructure.session import Session
-from ..infastructure.catalog_service import CatalogService
-from ..database.connection import async_session
 from fastapi import HTTPException
 
-class OrderCreateUseCase:
+from ..database.connection import async_session
+from ..database.models import Order
+from ..infastructure.catalog_service import CatalogService
+from ..infastructure.session import Session
+from ..schemas import OrderRequest
 
+
+class OrderCreateUseCase:
     @classmethod
     async def create_order(cls, order: OrderRequest) -> Order:
         # Проверяем что кол-ва достаточно
@@ -23,4 +24,3 @@ class OrderCreateUseCase:
             # Иначе создаем новый заказ
             result = await db.orders.create_order(order=order)
             return result
-

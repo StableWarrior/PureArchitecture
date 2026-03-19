@@ -1,15 +1,11 @@
-from datetime import datetime
 from uuid import UUID
-from zoneinfo import ZoneInfo
 
 import aiohttp
-from fastapi import HTTPException
 
-from ..config import EVENTS_API_URL, EVENTS_CAPASHINO_URL, LOGGER, X_API_KEY
+from ..config import EVENTS_CAPASHINO_URL, X_API_KEY
 
 
 class CatalogService:
-
     async def __aenter__(self):
         self.session = aiohttp.ClientSession(
             headers={
@@ -22,7 +18,6 @@ class CatalogService:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self.session:
             await self.session.close()
-
 
     async def get_item(self, item_id: UUID) -> dict:
         async with self.session.get(

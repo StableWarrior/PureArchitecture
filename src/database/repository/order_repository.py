@@ -1,6 +1,8 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import func, select
+
 from src.schemas import OrderRequest
+
 from ..models import Order
 
 
@@ -18,13 +20,16 @@ class OrderRepository:
 
         return order
 
-
-    async def get_order(self, order_id: str | None = None, idempotency_key: str | None = None) -> Order | None:
+    async def get_order(
+        self, order_id: str | None = None, idempotency_key: str | None = None
+    ) -> Order | None:
 
         if idempotency_key is None:
             result = await self.db.execute(select(Order).where(Order.id == order_id))
         else:
-            result = await self.db.execute(select(Order).where(Order.idempotency_key == idempotency_key))
+            result = await self.db.execute(
+                select(Order).where(Order.idempotency_key == idempotency_key)
+            )
 
         order = result.scalar_one_or_none()
 

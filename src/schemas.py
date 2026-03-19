@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class OrderRequest(BaseModel):
@@ -20,4 +20,3 @@ class OrderResponse(BaseModel):
     status: str
     created_at: datetime
     updated_at: datetime
-

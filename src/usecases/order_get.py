@@ -1,13 +1,13 @@
-from ..schemas import OrderRequest
-from fastapi import HTTPException
 from uuid import UUID
+
+from fastapi import HTTPException
+
+from ..database.connection import async_session
 from ..database.models import Order
 from ..infastructure.session import Session
-from ..database.connection import async_session
 
 
 class OrderGetUseCase:
-
     @classmethod
     async def get_order(cls, order_id: UUID) -> Order:
         async with Session(async_session()) as db:

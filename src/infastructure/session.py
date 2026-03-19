@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from ..database.repository.order_repository import OrderRepository
 
 
@@ -33,4 +34,3 @@ class Session:
     def orders(self) -> OrderRepository:
         """Доступ к OrderRepository"""
         return self.order_repo
-
