@@ -1,0 +1,17 @@
+from uuid import UUID
+
+from fastapi import HTTPException
+
+from ..database.connection import async_session
+from ..database.models import Order
+from ..infastructure.session import Session
+
+
+class OrderGetUseCase:
+    @classmethod
+    async def get_order(cls, order_id: UUID) -> Order:
+        async with Session(async_session()) as db:
+            result = await db.orders.get_order(order_id=order_id)
+            if result is None:
+                raise HTTPException(status_code=404, detail="Order not found")
+            return result
