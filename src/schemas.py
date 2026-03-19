@@ -9,7 +9,7 @@ class OrderRequest(BaseModel):
     user_id: str
     quantity: int
     item_id: UUID
-    idempotency_key: Optional[UUID] = None
+    idempotency_key: Optional[str] = None
 
 
 class OrderResponse(BaseModel):
