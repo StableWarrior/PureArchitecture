@@ -12,7 +12,7 @@ class OrderCreateUseCase:
     async def create_order(cls, order: OrderRequest) -> Order:
         # Проверяем что кол-ва достаточно
         async with CatalogService() as catalog:
-            result = catalog.get_item(item_id=order.item_id)
+            result = await catalog.get_item(item_id=order.item_id)
         if result["available_qty"] < order.quantity:
             raise HTTPException(status_code=400, detail="Order out of stock")
 
