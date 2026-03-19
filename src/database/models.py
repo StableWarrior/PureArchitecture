@@ -24,7 +24,7 @@ class Order(Base):
 
     status = Column(String, nullable=False, default="NEW")
 
-    idempotency_key = Column(UUID(as_uuid=True), nullable=False, unique=True)
+    idempotency_key = Column(String, nullable=False, unique=True)
 
     created_at = Column(
         DateTime(timezone=True),
