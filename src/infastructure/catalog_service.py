@@ -21,7 +21,7 @@ class CatalogService:
 
     async def get_item(self, item_id: UUID) -> dict:
         async with self.session.get(
-            f"{EVENTS_CAPASHINO_URL}/api/catalog/items/{item_id}/"
+            f"{EVENTS_CAPASHINO_URL}/api/catalog/items/{item_id}"
         ) as response:
             result = await response.json()
         return result
