@@ -1,12 +1,12 @@
 from fastapi import HTTPException
 
+from ..config import PAYMENT_URL
 from ..database.connection import async_session
 from ..database.models import Order
 from ..infastructure.catalog_service import CatalogService
 from ..infastructure.payment_service import PaymentService
 from ..infastructure.session import Session
 from ..schemas import OrderRequest, PaymentCallbackRequest
-from ..config import PAYMENT_URL
 
 
 class OrderCreateUseCase:
@@ -17,7 +17,6 @@ class OrderCreateUseCase:
             result = await catalog.get_item(item_id=order.item_id)
         if result["available_qty"] < order.quantity:
             raise HTTPException(status_code=400, detail="Order out of stock")
-
 
         async with Session(async_session()) as db:
             # Проверяем та же это операция или нет, если заказ такой есть, возвращаем его
@@ -34,7 +33,6 @@ class OrderCreateUseCase:
                 amount=str(result.quantity),
                 callback_url=f"{PAYMENT_URL}/api/orders/payment-callback",
                 idempotency_key=result.idempotency_key,
-
             )
             await payment.create_payment(request=request)
 

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, Literal, TypedDict
+from typing import Literal, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -21,11 +21,13 @@ class OrderResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+
 class PaymentCallbackRequest(BaseModel):
     order_id: UUID
     amount: str
     callback_url: str
     idempotency_key: str
+
 
 class PaymentCallbackResponse(BaseModel):
     payment_id: UUID

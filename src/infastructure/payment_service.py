@@ -1,8 +1,6 @@
-from uuid import UUID
-
 import aiohttp
 
-from ..config import EVENTS_CAPASHINO_URL, X_API_KEY, PAYMENT_URL
+from ..config import EVENTS_CAPASHINO_URL, X_API_KEY
 from ..schemas import PaymentCallbackRequest, PaymentCallbackResponse
 
 
@@ -20,10 +18,11 @@ class PaymentService:
         if self.session:
             await self.session.close()
 
-    async def create_payment(self, request: PaymentCallbackRequest) -> PaymentCallbackResponse:
+    async def create_payment(
+        self, request: PaymentCallbackRequest
+    ) -> PaymentCallbackResponse:
         async with self.session.post(
-            f"{EVENTS_CAPASHINO_URL}/api/payments",
-            json=request.model_dump_json()
+            f"{EVENTS_CAPASHINO_URL}/api/payments", json=request.model_dump_json()
         ) as response:
             result = await response.json()
         return result

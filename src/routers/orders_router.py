@@ -21,6 +21,7 @@ async def create_order(order: OrderRequest) -> Order:
     result = await OrderCreateUseCase.create_order(order=order)
     return result
 
+
 @router.post("/orders/payment-callback", name="update_order")
 async def update_order(payment: PaymentCallbackResponse):
     await OrderUpdateUseCase.update_order(payment=payment)

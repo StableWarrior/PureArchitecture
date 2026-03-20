@@ -1,4 +1,5 @@
 from uuid import UUID
+
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -36,9 +37,7 @@ class OrderRepository:
 
         return order
 
-    async def update_order(
-        self, order_id: UUID, status: str
-    ) -> Order | None:
+    async def update_order(self, order_id: UUID, status: str) -> Order | None:
 
         result = await self.db.execute(
             update(Order)
