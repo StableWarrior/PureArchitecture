@@ -22,7 +22,7 @@ class PaymentService:
         self, request: PaymentCallbackRequest
     ) -> PaymentCallbackResponse:
         async with self.session.post(
-            f"{EVENTS_CAPASHINO_URL}/api/payments", json=request.model_dump_json()
+            f"{EVENTS_CAPASHINO_URL}/api/payments", json=request.model_dump(mode="json")
         ) as response:
             result = await response.json()
         return result
