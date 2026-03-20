@@ -1,10 +1,12 @@
 from fastapi import HTTPException
 
+from ..config import PAYMENT_URL
 from ..database.connection import async_session
 from ..database.models import Order
 from ..infastructure.catalog_service import CatalogService
+from ..infastructure.payment_service import PaymentService
 from ..infastructure.session import Session
-from ..schemas import OrderRequest
+from ..schemas import OrderRequest, PaymentCallbackRequest
 
 
 class OrderCreateUseCase:
@@ -23,4 +25,15 @@ class OrderCreateUseCase:
                 return result
             # Иначе создаем новый заказ
             result = await db.orders.create_order(order=order)
-            return result
+
+        # Создаем платеж
+        async with PaymentService() as payment:
+            request = PaymentCallbackRequest(
+                order_id=result.id,
+                amount=str(result.quantity),
+                callback_url=f"{PAYMENT_URL}/api/orders/payment-callback",
+                idempotency_key=result.idempotency_key,
+            )
+            await payment.create_payment(request=request)
+
+        return result

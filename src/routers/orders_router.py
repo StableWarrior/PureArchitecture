@@ -3,9 +3,10 @@ from uuid import UUID
 from fastapi import APIRouter
 
 from ..database.models import Order
-from ..schemas import OrderRequest, OrderResponse
+from ..schemas import OrderRequest, OrderResponse, PaymentCallbackResponse
 from ..usecases.order_create import OrderCreateUseCase
 from ..usecases.order_get import OrderGetUseCase
+from ..usecases.order_update import OrderUpdateUseCase
 
 router = APIRouter(
     prefix="/api",
@@ -19,6 +20,11 @@ router = APIRouter(
 async def create_order(order: OrderRequest) -> Order:
     result = await OrderCreateUseCase.create_order(order=order)
     return result
+
+
+@router.post("/orders/payment-callback", name="update_order")
+async def update_order(payment: PaymentCallbackResponse):
+    await OrderUpdateUseCase.update_order(payment=payment)
 
 
 @router.get("/orders/{order_id}", name="get_order", response_model=OrderResponse)

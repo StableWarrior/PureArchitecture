@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Literal, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -20,3 +20,18 @@ class OrderResponse(BaseModel):
     status: str
     created_at: datetime
     updated_at: datetime
+
+
+class PaymentCallbackRequest(BaseModel):
+    order_id: UUID
+    amount: str
+    callback_url: str
+    idempotency_key: str
+
+
+class PaymentCallbackResponse(BaseModel):
+    payment_id: UUID
+    order_id: UUID
+    status: Literal["succeeded", "failed"]
+    amount: str
+    error_message: str | None
