@@ -11,12 +11,21 @@ class OrderUpdateUseCase:
             payment_data = payment.model_dump()
 
             if payment_data["status"] == "succeeded":
+                status = "PAID"
                 result = await db.orders.update_order(
-                    order_id=payment_data["order_id"], status="PAID"
+                    order_id=payment_data["order_id"], status=status
                 )
             elif payment_data["status"] == "failed":
+                status = "CANCELLED"
                 result = await db.orders.update_order(
-                    order_id=payment_data["order_id"], status="CANCELLED"
+                    order_id=payment_data["order_id"], status=status
                 )
+
+            await db.outbox.save(
+                event_type=f"order.{status.lower()}",
+                payload={},
+                status="ожидает отправки",
+                order_id=payment_data["order_id"],
+            )
 
             return result

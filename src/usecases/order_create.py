@@ -26,6 +26,13 @@ class OrderCreateUseCase:
             # Иначе создаем новый заказ
             result = await db.orders.create_order(order=order)
 
+            await db.outbox.save(
+                event_type="order.new",
+                payload={},
+                status="ожидает отправки",
+                order_id=result.id,
+            )
+
         # Создаем платеж
         async with PaymentService() as payment:
             request = PaymentCallbackRequest(
