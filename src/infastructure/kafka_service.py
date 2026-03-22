@@ -1,14 +1,15 @@
-import asyncio
 import json
-from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
-from ..config import KAFKA_BOOTSTRAP_SERVERS, KAFKA_PRODUCER_TOPIC, KAFKA_CONSUMER_TOPIC
+
+from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
+
+from ..config import KAFKA_BOOTSTRAP_SERVERS, KAFKA_CONSUMER_TOPIC, KAFKA_PRODUCER_TOPIC
+
 
 class KafkaProducer:
-
     async def __aenter__(self):
         self.producer = AIOKafkaProducer(
             bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-            value_serializer=lambda v: json.dumps(v).encode("utf-8")
+            value_serializer=lambda v: json.dumps(v).encode("utf-8"),
         )
         await self.producer.start()
         return self
@@ -22,7 +23,6 @@ class KafkaProducer:
 
 
 class KafkaConsumer:
-
     async def __aenter__(self):
         self.consumer = AIOKafkaConsumer(
             KAFKA_CONSUMER_TOPIC,

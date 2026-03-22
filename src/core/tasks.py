@@ -1,24 +1,25 @@
-from ..infastructure.session import Session
-from ..infastructure.kafka_service import KafkaConsumer, KafkaProducer
-from ..database.connection import async_session
 from ..config import LOGGER
+from ..database.connection import async_session
+from ..infastructure.kafka_service import KafkaConsumer, KafkaProducer
+from ..infastructure.session import Session
 
 
 async def sync_order_paid():
     async with Session(async_session()) as db:
-
-        outboxes = await db.outbox.get(event_type="order.paid", status="ожидает отправки")
+        outboxes = await db.outbox.get(
+            event_type="order.paid", status="ожидает отправки"
+        )
 
         for outbox in outboxes:
             try:
                 async with KafkaProducer() as kafka:
                     await kafka.send(
                         event={
-                          "event_type": outbox.event_type,
-                          "order_id": outbox.order_id,
-                          "item_id": outbox.order.item_id,
-                          "quantity": outbox.order.quantity,
-                          "idempotency_key": outbox.order.idempotency_key
+                            "event_type": outbox.event_type,
+                            "order_id": outbox.order_id,
+                            "item_id": outbox.order.item_id,
+                            "quantity": outbox.order.quantity,
+                            "idempotency_key": outbox.order.idempotency_key,
                         }
                     )
             except Exception as exc:
@@ -54,6 +55,10 @@ async def sync_shipment_status():
                 order_id=inbox["order_id"],
             )
             if inbox["event_type"] == "order.shipped":
-                await db.orders.update_order(order_id=inbox["order_id"], status="SHIPPED")
+                await db.orders.update_order(
+                    order_id=inbox["order_id"], status="SHIPPED"
+                )
             elif inbox["event_type"] == "order.cancelled":
-                await db.orders.update_order(order_id=inbox["order_id"], status="CANCELLED")
+                await db.orders.update_order(
+                    order_id=inbox["order_id"], status="CANCELLED"
+                )

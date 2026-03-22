@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..database.repository.inbox_repository import InboxRepository
 from ..database.repository.order_repository import OrderRepository
 from ..database.repository.outbox_repository import OutboxRepository
-from ..database.repository.inbox_repository import InboxRepository
 
 
 class Session:
