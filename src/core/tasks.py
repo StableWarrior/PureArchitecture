@@ -70,6 +70,7 @@ async def sync_notifications():
         inboxes = await db.inbox.get(status="ожидает отправки")
 
         for outbox in outboxes:
+            LOGGER.info("event-type", type=outbox.event_type)
             try:
                 async with CapashinoService() as capashino:
                     await capashino.send(
@@ -88,6 +89,8 @@ async def sync_notifications():
             await db.outbox.update(outbox)
 
         for inbox in inboxes:
+            LOGGER.info("inbox", type=inbox.event_type)
+            LOGGER.info("inbox", order_id=inbox.payload["order_id"])
             try:
                 async with CapashinoService() as capashino:
                     await capashino.send(
