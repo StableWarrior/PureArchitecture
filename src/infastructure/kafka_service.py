@@ -2,7 +2,12 @@ import json
 
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
-from ..config import KAFKA_BOOTSTRAP_SERVERS, KAFKA_CONSUMER_TOPIC, KAFKA_PRODUCER_TOPIC, LOGGER
+from ..config import (
+    KAFKA_BOOTSTRAP_SERVERS,
+    KAFKA_CONSUMER_TOPIC,
+    KAFKA_PRODUCER_TOPIC,
+    LOGGER,
+)
 
 
 class KafkaProducer:
