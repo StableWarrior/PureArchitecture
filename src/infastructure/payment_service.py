@@ -1,6 +1,6 @@
 import aiohttp
 
-from ..config import EVENTS_CAPASHINO_URL, X_API_KEY
+from ..config import EVENTS_CAPASHINO_URL, LOGGER, X_API_KEY
 from ..schemas import PaymentCallbackRequest, PaymentCallbackResponse
 
 
@@ -25,4 +25,5 @@ class PaymentService:
             f"{EVENTS_CAPASHINO_URL}/api/payments", json=request.model_dump(mode="json")
         ) as response:
             result = await response.json()
+            LOGGER.info("result", result=result)
         return result
