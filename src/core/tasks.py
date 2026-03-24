@@ -45,9 +45,10 @@ async def sync_shipment_status():
             "error_message": exc.__str__(),
         }
         LOGGER.error("Failed to sync outbox message", error=error)
-
+    LOGGER.info("len", len=len(inboxes))
     async with Session(async_session()) as db:
         for inbox in inboxes:
+            LOGGER.info("inbox", inbox=inbox)
             await db.inbox.save(
                 event_type=inbox["event_type"],
                 payload=inbox,
@@ -62,3 +63,6 @@ async def sync_shipment_status():
                 await db.orders.update_order(
                     order_id=inbox["order_id"], status="CANCELLED"
                 )
+        inboxes = await db.inbox.get("ожидает отправки")
+        LOGGER.info("inboxes", len=len(inboxes))
+        LOGGER.info("inboxes", inboxes=inboxes)
