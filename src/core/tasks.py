@@ -1,8 +1,8 @@
 from ..config import LOGGER
 from ..database.connection import async_session
+from ..infastructure.capashino_service import CapashinoService
 from ..infastructure.kafka_service import KafkaConsumer, KafkaProducer
 from ..infastructure.session import Session
-from ..infastructure.capashino_service import CapashinoService
 
 
 async def sync_order_paid():
@@ -66,12 +66,8 @@ async def sync_shipment_status():
 
 async def sync_notifications():
     async with Session(async_session()) as db:
-        outboxes = await db.outbox.get(
-            status="ожидает отправки"
-        )
-        inboxes = await db.inbox.get(
-            status="ожидает отправки"
-        )
+        outboxes = await db.outbox.get(status="ожидает отправки")
+        inboxes = await db.inbox.get(status="ожидает отправки")
 
         for outbox in outboxes:
             try:
@@ -90,7 +86,6 @@ async def sync_notifications():
                 LOGGER.error("Failed to sync outbox message", error=error)
 
             await db.outbox.update(outbox)
-
 
         for inbox in inboxes:
             try:

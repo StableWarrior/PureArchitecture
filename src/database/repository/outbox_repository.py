@@ -32,9 +32,7 @@ class OutboxRepository:
             filters.append(Outbox.event_type == event_type)
 
         result = await self.db.execute(
-            select(Outbox)
-            .options(joinedload(Outbox.order))
-            .where(*filters)
+            select(Outbox).options(joinedload(Outbox.order)).where(*filters)
         )
 
         outboxes = result.unique().scalars().all()
