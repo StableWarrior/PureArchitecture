@@ -16,8 +16,8 @@ async def sync_order_paid():
                     await kafka.send(
                         event={
                             "event_type": outbox.event_type,
-                            "order_id": outbox.order_id,
-                            "item_id": outbox.order.item_id,
+                            "order_id": str(outbox.order_id),
+                            "item_id": str(outbox.order.item_id),
                             "quantity": outbox.order.quantity,
                             "idempotency_key": outbox.order.idempotency_key,
                         }
