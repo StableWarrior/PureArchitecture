@@ -33,6 +33,8 @@ class KafkaConsumer:
             KAFKA_CONSUMER_TOPIC,
             bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
             value_deserializer=lambda v: json.loads(v.decode("utf-8")),
+            consumer_timeout_ms=5000,
+            max_poll_records=5,
         )
         await self.consumer.start()
         return self
