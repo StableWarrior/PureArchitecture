@@ -1,6 +1,6 @@
 import aiohttp
 
-from ..config import EVENTS_CAPASHINO_URL, X_API_KEY, LOGGER
+from ..config import EVENTS_CAPASHINO_URL, LOGGER, X_API_KEY
 from ..schemas import PaymentCallbackRequest, PaymentCallbackResponse
 
 
