@@ -26,7 +26,7 @@ class OutboxRepository:
 
         return outbox
 
-    async def get(self, status: str, event_type: str | None):
+    async def get(self, status: str, event_type: str | None = None):
         filters = [Outbox.status == status]
         if event_type:
             filters.append(Outbox.event_type == event_type)
