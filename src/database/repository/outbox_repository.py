@@ -26,11 +26,13 @@ class OutboxRepository:
 
         return outbox
 
-    async def get(self, event_type: str, status: str):
+    async def get(self, status: str, event_type: str | None):
+        filters = [Outbox.status == status]
+        if event_type:
+            filters.append(Outbox.event_type == event_type)
+
         result = await self.db.execute(
-            select(Outbox)
-            .options(joinedload(Outbox.order))
-            .where(Outbox.status == status, Outbox.event_type == event_type)
+            select(Outbox).options(joinedload(Outbox.order)).where(*filters)
         )
 
         outboxes = result.unique().scalars().all()
