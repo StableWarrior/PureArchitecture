@@ -45,7 +45,7 @@ async def sync_shipment_status():
             "error_message": exc.__str__(),
         }
         LOGGER.error("Failed to sync outbox message", error=error)
-    LOGGER.info("len", len=len(inboxes))
+    LOGGER.info("len", len=inboxes)
     async with Session(async_session()) as db:
         for inbox in inboxes:
             LOGGER.info("inbox", inbox=inbox)
