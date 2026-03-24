@@ -40,7 +40,7 @@ class KafkaConsumer:
         if self.consumer:
             await self.consumer.stop()
 
-async def get(self):
+    async def get(self):
         messages = []
         while not messages:
             batch = await self.consumer.getmany(timeout_ms=5000, max_records=5)
