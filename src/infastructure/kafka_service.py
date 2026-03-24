@@ -44,6 +44,6 @@ class KafkaConsumer:
     async def get(self):
         messages = []
         async for msg in self.consumer:
-            LOGGER.info("value", value=len(msg.value))
+            LOGGER.info("value", value=msg.value)
             messages.append(msg.value)
         return messages
