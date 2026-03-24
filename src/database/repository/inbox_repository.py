@@ -27,3 +27,9 @@ class InboxRepository:
         inboxes = result.scalars().all()
 
         return inboxes
+
+    async def update(self, inbox: Inbox):
+        inbox.status = "отправлено"
+        await self.db.flush()
+
+        return inbox
