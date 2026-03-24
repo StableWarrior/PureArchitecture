@@ -53,7 +53,6 @@ async def sync_shipment_status():
                 event_type=inbox["event_type"],
                 payload=inbox,
                 status="ожидает отправки",
-                order_id=inbox["order_id"],
             )
             if inbox["event_type"] == "order.shipped":
                 await db.orders.update_order(
