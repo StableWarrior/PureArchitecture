@@ -96,7 +96,7 @@ async def sync_notifications():
                     await capashino.send(
                         message=inbox.event_type,
                         reference_id=inbox.payload["order_id"],
-                        idempotency_key=inbox.payload["idempotency_key"],
+                        idempotency_key=inbox.payload.get("idempotency_key"),
                     )
             except Exception as exc:
                 error = {
