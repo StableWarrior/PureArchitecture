@@ -32,6 +32,7 @@ class KafkaConsumer:
             KAFKA_CONSUMER_TOPIC,
             bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
             value_deserializer=lambda v: json.loads(v.decode("utf-8")),
+            auto_offset_reset="earliest",
         )
         await self.consumer.start()
         return self
