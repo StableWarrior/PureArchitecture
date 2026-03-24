@@ -43,9 +43,8 @@ class KafkaConsumer:
 
     async def get(self):
         messages = []
-        while not messages:
-            batch = await self.consumer.getmany(timeout_ms=5000, max_records=5)
-            for tp, msgs in batch.items():
-                for msg in msgs:
-                    messages.append(msg.value)
+        batch = await self.consumer.getmany(timeout_ms=10000, max_records=5)
+        for tp, msgs in batch.items():
+            for msg in msgs:
+                messages.append(msg.value)
         return messages

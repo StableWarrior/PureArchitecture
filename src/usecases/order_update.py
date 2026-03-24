@@ -2,6 +2,7 @@ from ..database.connection import async_session
 from ..database.models import Order
 from ..infastructure.session import Session
 from ..schemas import PaymentCallbackResponse
+from ..config import LOGGER
 
 
 class OrderUpdateUseCase:
@@ -21,6 +22,7 @@ class OrderUpdateUseCase:
                     order_id=payment_data["order_id"], status=status
                 )
 
+            LOGGER.info("payment", status=status)
             await db.outbox.save(
                 event_type=f"order.{status.lower()}",
                 payload={},
