@@ -46,6 +46,6 @@ class KafkaConsumer:
         batch = await self.consumer.getmany(timeout_ms=5000, max_records=5)
         for tp, msgs in batch.items():
             for msg in msgs:
-                LOGGER.info("value", value=msg.value["value"])
-                messages.append(msg.value["value"])
+                LOGGER.info("value", value=msg.value)
+                messages.append(msg.value)
         return messages
