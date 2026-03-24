@@ -12,7 +12,7 @@ async def main():
 
     scheduler.add_job(
         sync_shipment_status,
-        IntervalTrigger(seconds=15),
+        IntervalTrigger(seconds=30),
         id="sync_shipment_status",
         replace_existing=True,
         max_instances=1,
