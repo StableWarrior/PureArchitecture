@@ -12,7 +12,7 @@ async def main():
 
     scheduler.add_job(
         sync_order_paid,
-        IntervalTrigger(seconds=10),
+        IntervalTrigger(seconds=15),
         id="sync_order_paid",
         replace_existing=True,
         max_instances=1,
