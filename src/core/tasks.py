@@ -49,6 +49,7 @@ async def sync_shipment_status():
 
     async with Session(async_session()) as db:
         for inbox in inboxes:
+            LOGGER.info("shipment", type=inbox["event_type"])
             await db.inbox.save(
                 event_type=inbox["event_type"],
                 payload=inbox,
@@ -62,6 +63,10 @@ async def sync_shipment_status():
                 await db.orders.update_order(
                     order_id=inbox["order_id"], status="CANCELLED"
                 )
+
+        result = await db.inbox.get(status="ожидает отправки")
+        for inbox in result:
+            LOGGER.info("inbox", type=inbox.event_type)
 
 
 async def sync_notifications():
@@ -90,7 +95,6 @@ async def sync_notifications():
 
         for inbox in inboxes:
             LOGGER.info("inbox", type=inbox.event_type)
-            LOGGER.info("inbox", order_id=inbox.payload["order_id"])
             try:
                 async with CapashinoService() as capashino:
                     await capashino.send(
