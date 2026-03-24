@@ -2,6 +2,7 @@ from ..config import LOGGER
 from ..database.connection import async_session
 from ..infastructure.kafka_service import KafkaConsumer, KafkaProducer
 from ..infastructure.session import Session
+from ..infastructure.capashino_service import CapashinoService
 
 
 async def sync_order_paid():
@@ -61,3 +62,50 @@ async def sync_shipment_status():
                 await db.orders.update_order(
                     order_id=inbox["order_id"], status="CANCELLED"
                 )
+
+
+async def sync_notifications():
+    async with Session(async_session()) as db:
+        outboxes = await db.outbox.get(
+            status="ожидает отправки"
+        )
+        inboxes = await db.inbox.get(
+            status="ожидает отправки"
+        )
+
+        for outbox in outboxes:
+            try:
+                async with CapashinoService() as capashino:
+                    await capashino.send(
+                        message=outbox.event_type,
+                        reference_id=outbox.order_id,
+                        idempotency_key=outbox.order.idempotency_key,
+                    )
+            except Exception as exc:
+                error = {
+                    "result": False,
+                    "error_type": exc.__class__.__name__,
+                    "error_message": exc.__str__(),
+                }
+                LOGGER.error("Failed to sync outbox message", error=error)
+
+            await db.outbox.update(outbox)
+
+
+        for inbox in inboxes:
+            try:
+                async with CapashinoService() as capashino:
+                    await capashino.send(
+                        message=inbox.event_type,
+                        reference_id=inbox.payload["order_id"],
+                        idempotency_key=inbox.payload["idempotency_key"],
+                    )
+            except Exception as exc:
+                error = {
+                    "result": False,
+                    "error_type": exc.__class__.__name__,
+                    "error_message": exc.__str__(),
+                }
+                LOGGER.error("Failed to sync outbox message", error=error)
+
+            await db.inbox.update(inbox)
