@@ -15,7 +15,7 @@ async def main():
         IntervalTrigger(seconds=15),
         id="sync_shipment_status",
         replace_existing=True,
-        max_instances=2,
+        max_instances=1,
         coalesce=True,
     )
 

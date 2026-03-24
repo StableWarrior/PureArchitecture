@@ -6,7 +6,6 @@ from ..config import (
     KAFKA_BOOTSTRAP_SERVERS,
     KAFKA_CONSUMER_TOPIC,
     KAFKA_PRODUCER_TOPIC,
-    LOGGER,
 )
 
 
@@ -46,6 +45,5 @@ class KafkaConsumer:
         batch = await self.consumer.getmany(timeout_ms=5000, max_records=5)
         for tp, msgs in batch.items():
             for msg in msgs:
-                LOGGER.info("value", value=msg.value)
                 messages.append(msg.value)
         return messages
