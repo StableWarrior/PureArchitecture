@@ -49,7 +49,7 @@ async def sync_shipment_status():
 
     async with Session(async_session()) as db:
         for inbox in inboxes:
-            LOGGER.info("shipment", type=inbox["event_type"])
+            LOGGER.info("shipment", inbox=inbox)
             await db.inbox.save(
                 event_type=inbox["event_type"],
                 payload=inbox,
@@ -75,7 +75,7 @@ async def sync_notifications():
         inboxes = await db.inbox.get(status="ожидает отправки")
 
         for outbox in outboxes:
-            LOGGER.info("event-type", type=outbox.event_type)
+            LOGGER.info("outbox", type=outbox.event_type)
             try:
                 async with CapashinoService() as capashino:
                     await capashino.send(
