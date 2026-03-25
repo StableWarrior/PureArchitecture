@@ -1,8 +1,8 @@
+from ..config import LOGGER
 from ..database.connection import async_session
 from ..database.models import Order
 from ..infastructure.session import Session
 from ..schemas import PaymentCallbackResponse
-from ..config import LOGGER
 
 
 class OrderUpdateUseCase:
