@@ -20,7 +20,7 @@ async def sync_order_paid():
                             "order_id": str(outbox.order_id),
                             "item_id": str(outbox.order.item_id),
                             "quantity": outbox.order.quantity,
-                            "idempotency_key": outbox.order.idempotency_key,
+                            "idempotency_key": f"outbox-{outbox.id}",
                         }
                     )
             except Exception as exc:
@@ -75,7 +75,7 @@ async def sync_notifications():
                     await capashino.send(
                         message=outbox.event_type,
                         reference_id=outbox.order_id,
-                        idempotency_key=outbox.order.idempotency_key,
+                        idempotency_key=f"outbox-{outbox.id}",
                     )
             except Exception as exc:
                 error = {
