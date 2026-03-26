@@ -14,6 +14,7 @@ async def sync_order_paid():
         for outbox in outboxes:
             try:
                 async with KafkaProducer() as kafka:
+                    LOGGER.info("status", paid=outbox.event_type)
                     await kafka.send(
                         event={
                             "event_type": outbox.event_type,
@@ -63,10 +64,6 @@ async def sync_shipment_status():
                 await db.orders.update_order(
                     order_id=inbox["order_id"], status="CANCELLED"
                 )
-
-        result = await db.inbox.get(status="ожидает отправки")
-        for inbox in result:
-            LOGGER.info("inbox", type=inbox.event_type)
 
 
 async def sync_notifications():
