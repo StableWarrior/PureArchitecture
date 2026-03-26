@@ -2,7 +2,7 @@ from uuid import UUID
 
 import aiohttp
 
-from ..config import EVENTS_CAPASHINO_URL, X_API_KEY
+from ..config import EVENTS_CAPASHINO_URL, LOGGER, X_API_KEY
 
 
 class CapashinoService:
@@ -32,6 +32,18 @@ class CapashinoService:
         async with self.session.post(
             f"{EVENTS_CAPASHINO_URL}/api/notifications", json=data
         ) as response:
+            LOGGER.info("capashino-post", result=response.text, json=response.json())
+            result = await response.json()
+
+        return result
+
+    async def get(
+        self,
+    ):
+        async with self.session.get(
+            f"{EVENTS_CAPASHINO_URL}/api/notifications"
+        ) as response:
+            LOGGER.info("capashino-get", result=response.text, json=response.json())
             result = await response.json()
 
         return result
