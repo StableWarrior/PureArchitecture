@@ -32,8 +32,6 @@ async def sync_order_paid():
                 }
                 LOGGER.error("Failed to sync outbox message", error=error)
 
-            await db.outbox.update(outbox)
-
 
 async def sync_shipment_status():
 
