@@ -5,6 +5,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
+from src.config import LOGGER
+
 from ..models import Outbox
 
 
@@ -36,6 +38,12 @@ class OutboxRepository:
         )
 
         outboxes = result.unique().scalars().all()
+
+        LOGGER.info("filters", filters=filters)
+        for o in outboxes:
+            LOGGER.info(
+                "outboxes", data=f"status={o.status}, event_type={o.event_type}"
+            )
 
         return outboxes
 

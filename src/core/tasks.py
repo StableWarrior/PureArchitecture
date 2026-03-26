@@ -14,7 +14,6 @@ async def sync_order_paid():
         for outbox in outboxes:
             try:
                 async with KafkaProducer() as kafka:
-                    LOGGER.info("status", paid=outbox.event_type)
                     await kafka.send(
                         event={
                             "event_type": outbox.event_type,
