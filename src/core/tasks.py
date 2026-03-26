@@ -105,6 +105,3 @@ async def sync_notifications():
                 LOGGER.error("Failed to sync outbox message", error=error)
 
             await db.inbox.update(inbox)
-
-    async with CapashinoService() as capashino:
-        await capashino.get()
