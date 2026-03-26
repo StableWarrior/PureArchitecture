@@ -32,7 +32,11 @@ class CapashinoService:
         async with self.session.post(
             f"{EVENTS_CAPASHINO_URL}/api/notifications", json=data
         ) as response:
-            LOGGER.info("capashino-post", result=response.text, json=response.json())
+            LOGGER.info(
+                "capashino-post",
+                result=await response.text(),
+                json=await response.json(),
+            )
             result = await response.json()
 
         return result
@@ -43,7 +47,11 @@ class CapashinoService:
         async with self.session.get(
             f"{EVENTS_CAPASHINO_URL}/api/notifications"
         ) as response:
-            LOGGER.info("capashino-get", result=response.text, json=response.json())
+            LOGGER.info(
+                "capashino-get",
+                result=await response.text(),
+                json=await response.json(),
+            )
             result = await response.json()
 
         return result
